@@ -25,7 +25,7 @@ namespace snake
         public MainWindow()
         {
             InitializeComponent();
-            Game = new game(GameField);
+            Game = new game(GameField, ScoreLabel);
             Game.run();
         }
 

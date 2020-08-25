@@ -23,28 +23,31 @@ namespace snake
         private sbyte[] Foodcord = new sbyte[2];  //The cord of the food
         private readonly Random rnd = new Random(); //Random
         private bool eaten = false;  //If we ate the food
+        private Label ScoreLabel; //The Label for the score
 
         //Properties
         public int score { get; private set; }
 
         //------------------------------------------------------------------
         //Constructor
-        public game(Grid Field)
+        public game(Grid Field, Label ScoreLabel)
         {
             this.Field = Field;
             maxXsize = (sbyte)Field.ColumnDefinitions.Count;
             maxYsize = (sbyte)Field.RowDefinitions.Count;
-
+            this.score = 0;
             SetupGrid();
+            this.ScoreLabel = ScoreLabel;
         }
 
         //-----------------------------------------------------------------------
         //Spawns the food
         private void SpawnFood()
         {
-            bool isFound = false;
+            bool isFound;
             do
             {
+                isFound = false;
                 Foodcord[0] = (sbyte)rnd.Next(0, maxXsize);
                 Foodcord[1] = (sbyte)rnd.Next(0, maxYsize);
 
@@ -85,13 +88,15 @@ namespace snake
 
             clear();
 
+            //Paints the snake's body
             for (int i = 0; i < Player.size; i++)
             {
                 Rectangle temp = Field.Children[cords[i, 0] + cords[i, 1] * maxXsize] as Rectangle;
                 temp.Fill = Brushes.Black;
             }//for
             Rectangle Foodsquare = Field.Children[Foodcord[0] + Foodcord[1] * maxXsize] as Rectangle;
-            Foodsquare.Fill = Brushes.Red;
+            Foodsquare.Fill = Brushes.Red; //Paints the place for the food
+            ScoreLabel.Content = score; //Updates score
         }
 
         //----------------------------------------------------------------------
@@ -149,6 +154,7 @@ namespace snake
                 eaten = Player.head.xcord == Foodcord[0] && Player.head.ycord == Foodcord[1];
                 if (eaten)
                 {
+                    score++;
                     //spawn new food
                     SpawnFood();
                 }//if

@@ -5,13 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:snake"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="600" KeyDown="Window_KeyDown">
+        Title="SnakeGame" Height="630" Width="600" KeyDown="Window_KeyDown">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30px" />
+            <RowDefinition Height=" *" />
+        </Grid.RowDefinitions>
 
-        <Grid Name="GameField" Grid.Column="0">
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Label Content="Score" Foreground="Black" FontSize="18"></Label>
+            <Label Name="ScoreLabel" Content="0" FontSize="18"></Label>
+        </StackPanel>
+
+        <Grid Name="GameField" Grid.Column="0" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
