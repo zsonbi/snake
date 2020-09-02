@@ -24,6 +24,7 @@ namespace snake
         private readonly Random rnd = new Random(); //Random
         private bool eaten = false;  //If we ate the food
         private Label ScoreLabel; //The Label for the score
+        private Brush BackgroundColor = Brushes.Gray;
 
         //Properties
         public int score { get; private set; }
@@ -108,7 +109,7 @@ namespace snake
                 for (int j = 0; j < maxXsize; j++)
                 {
                     Rectangle rect = new Rectangle();
-                    rect.Fill = Brushes.White;
+                    rect.Fill = BackgroundColor;
                     Grid.SetColumn(rect, j);
                     Grid.SetRow(rect, i);
                     Field.Children.Add(rect);
@@ -123,7 +124,7 @@ namespace snake
             foreach (var item in Field.Children)
             {
                 Rectangle temp = item as Rectangle;
-                temp.Fill = Brushes.White;
+                temp.Fill = BackgroundColor;
             }//forea
         }
 

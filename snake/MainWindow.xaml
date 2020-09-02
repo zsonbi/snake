@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:snake"
         mc:Ignorable="d"
         Title="SnakeGame" Height="630" Width="600" KeyDown="Window_KeyDown">
-    <Grid>
+    <Grid Background="DarkGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="30px" />
             <RowDefinition Height=" *" />
@@ -17,7 +17,7 @@
             <Label Name="ScoreLabel" Content="0" FontSize="18"></Label>
         </StackPanel>
 
-        <Grid Name="GameField" Grid.Column="0" Grid.Row="1">
+        <Grid Name="GameField" Grid.Column="0" Grid.Row="1" Background="Gray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
