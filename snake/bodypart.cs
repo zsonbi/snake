@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace snake
+﻿namespace snake
 {
-    internal class bodypart
+    internal struct BodyPart
     {
         //Properties
-        public sbyte xcord { get; private set; }
+        public sbyte XCoord { get; private set; }
 
-        public sbyte ycord { get; private set; }
+        public sbyte YCoord { get; private set; }
 
         //--------------------------------------------------------
         //Constructor
-        public bodypart(sbyte xcord, sbyte ycord)
+        public BodyPart(sbyte XCoord, sbyte YCoord)
         {
-            this.xcord = xcord;
-            this.ycord = ycord;
+            this.XCoord = XCoord;
+            this.YCoord = YCoord;
         }
     }
 }

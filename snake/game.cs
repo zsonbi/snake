@@ -1,62 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace snake
 {
-    internal class game
+    internal class Game
     {
         //private Varriables
 
-        private Snake Player;     //The snake
+        private Snake player;     //The snake
         private sbyte direction = 1;  //The direction where the snake is looking
         private bool isRunning = false;  //So that we can't start 2 games at once
-        private Grid Field;    //The Grid where we will draw
+        private Grid field;    //The Grid where we will draw
         private sbyte maxXsize;  //The max size on the x axis
         private sbyte maxYsize; //The max size on the y axis
-        private sbyte[] Foodcord = new sbyte[2];  //The cord of the food
+        private sbyte[] foodCoord = new sbyte[2];  //The cord of the food
         private readonly Random rnd = new Random(); //Random
         private bool eaten = false;  //If we ate the food
-        private Label ScoreLabel; //The Label for the score
-        private Brush BackgroundColor = Brushes.Gray;
+        private Label scoreLabel; //The Label for the score
+        private readonly Brush backgroundColor = Brushes.Gray; //The default background
 
         //Properties
-        public int score { get; private set; }
+        public int Score { get; private set; }
 
         //------------------------------------------------------------------
         //Constructor
-        public game(Grid Field, Label ScoreLabel)
+        public Game(Grid field, Label scoreLabel)
         {
-            this.Field = Field;
-            maxXsize = (sbyte)Field.ColumnDefinitions.Count;
-            maxYsize = (sbyte)Field.RowDefinitions.Count;
-            this.score = 0;
+            this.field = field;
+            maxXsize = (sbyte)field.ColumnDefinitions.Count;
+            maxYsize = (sbyte)field.RowDefinitions.Count;
+            this.Score = 0;
             SetupGrid();
-            this.ScoreLabel = ScoreLabel;
+            this.scoreLabel = scoreLabel;
         }
 
         //-----------------------------------------------------------------------
         //Spawns the food
         private void SpawnFood()
         {
+            if (maxXsize * maxYsize == player.SnakeSize)
+            {
+                System.Windows.MessageBox.Show("Win!");
+                return;
+            }
+
             bool isFound;
             do
             {
                 isFound = false;
-                Foodcord[0] = (sbyte)rnd.Next(0, maxXsize);
-                Foodcord[1] = (sbyte)rnd.Next(0, maxYsize);
+                foodCoord[0] = (sbyte)rnd.Next(0, maxXsize);
+                foodCoord[1] = (sbyte)rnd.Next(0, maxYsize);
 
-                sbyte[,] cords = Player.Getcords();
+                sbyte[,] cords = player.Getcords();
                 //So that the food can't spawn into the snake
-                for (int i = 0; i < Player.size; i++)
+                for (int i = 0; i < player.SnakeSize; i++)
                 {
-                    if (Foodcord[0] == cords[i, 0] && Foodcord[1] == cords[i, 1])
+                    if (foodCoord[0] == cords[i, 0] && foodCoord[1] == cords[i, 1])
                     {
                         isFound = true;
                         break;
@@ -73,7 +75,7 @@ namespace snake
             {
                 this.run();
             }
-            else if (Math.Abs(this.direction - (2 * (direction % 2) + 2)) == direction && Player.size > 1)
+            else if (Math.Abs(this.direction - (2 * (direction % 2) + 2)) == direction && player.SnakeSize > 1)
             {
                 return;
             }
@@ -83,21 +85,16 @@ namespace snake
 
         //-----------------------------------------------------------------------
         //Updates the grid
-        private void Update()
+        private void Update(sbyte[] previousTailCoord)
         {
-            sbyte[,] cords = Player.Getcords();
+            (field.Children[player.Head.XCoord + player.Head.YCoord * maxXsize] as Rectangle).Fill = Brushes.Black;
 
-            clear();
+            if (!eaten)
+                (field.Children[previousTailCoord[0] + previousTailCoord[1] * maxXsize] as Rectangle).Fill = backgroundColor;
 
-            //Paints the snake's body
-            for (int i = 0; i < Player.size; i++)
-            {
-                Rectangle temp = Field.Children[cords[i, 0] + cords[i, 1] * maxXsize] as Rectangle;
-                temp.Fill = Brushes.Black;
-            }//for
-            Rectangle Foodsquare = Field.Children[Foodcord[0] + Foodcord[1] * maxXsize] as Rectangle;
+            Rectangle Foodsquare = field.Children[foodCoord[0] + foodCoord[1] * maxXsize] as Rectangle;
             Foodsquare.Fill = Brushes.Red; //Paints the place for the food
-            ScoreLabel.Content = score; //Updates score
+            scoreLabel.Content = Score; //Updates score
         }
 
         //----------------------------------------------------------------------
@@ -109,22 +106,23 @@ namespace snake
                 for (int j = 0; j < maxXsize; j++)
                 {
                     Rectangle rect = new Rectangle();
-                    rect.Fill = BackgroundColor;
+                    rect.Fill = backgroundColor;
                     Grid.SetColumn(rect, j);
                     Grid.SetRow(rect, i);
-                    Field.Children.Add(rect);
+                    field.Children.Add(rect);
                 }//for
             }//for
         }
 
         //-----------------------------------------------------------------
         //Paints all the Rectangles in the Field white
+        //No longer used
         private void clear()
         {
-            foreach (var item in Field.Children)
+            foreach (var item in field.Children)
             {
                 Rectangle temp = item as Rectangle;
-                temp.Fill = BackgroundColor;
+                temp.Fill = backgroundColor;
             }//forea
         }
 
@@ -139,23 +137,29 @@ namespace snake
             }//if
             isRunning = true;
 
-            Player = new Snake(maxXsize, maxYsize);
+            player = new Snake(maxXsize, maxYsize);
             //The first food
             SpawnFood();
 
-            while (!Player.Dead)
+            while (!player.Dead)
             {
-                //Updates the game
-                Update();
+                sbyte[] previousTail = new sbyte[2] { player.Tail.XCoord, player.Tail.YCoord };
+
                 //Moves the snake
-                Player.Move(direction, eaten);
+                player.Move(direction, eaten);
+
+                //Updates the game
+                Update(previousTail);
+
                 //Detects if it went to itself
-                Player.DetectCollision();
+                player.DetectCollision();
                 //if it eaten a food
-                eaten = Player.head.xcord == Foodcord[0] && Player.head.ycord == Foodcord[1];
+                eaten = player.Head.XCoord == foodCoord[0] && player.Head.YCoord == foodCoord[1];
                 if (eaten)
                 {
-                    score++;
+                    (field.Children[foodCoord[0] + foodCoord[1] * maxXsize] as Rectangle).Fill = Brushes.Black;
+
+                    Score++;
                     //spawn new food
                     SpawnFood();
                 }//if

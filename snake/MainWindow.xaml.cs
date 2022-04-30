@@ -9,12 +9,12 @@ namespace snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private game Game;
+        private Game Game;
 
         public MainWindow()
         {
             InitializeComponent();
-            Game = new game(GameField, ScoreLabel);
+            Game = new Game(GameField, ScoreLabel);
             Game.run();
         }
 

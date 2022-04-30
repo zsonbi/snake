@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snake
 {
@@ -11,12 +7,19 @@ namespace snake
     {
         //Properties
 
-        public int size { get; private set; }
+        public int SnakeSize { get; private set; }
         public bool Dead { get; private set; }
+
+        //----------------------------------------------------------------
+        //Gets the head
+        public BodyPart Head { get => bodyParts[0]; }
+
+        public BodyPart Tail { get => bodyParts.Last(); }
 
         //Private Varriables
 
-        private List<bodypart> bodyparts = new List<bodypart>();
+        private List<BodyPart> bodyParts = new List<BodyPart>();
+
         private sbyte maxXsize;
         private sbyte maxYsize;
 
@@ -24,51 +27,44 @@ namespace snake
         //Constructor
         public Snake(sbyte maxXsize, sbyte maxYsize, int initialsize = 1)
         {
-            size = initialsize;
+            SnakeSize = initialsize;
             Dead = false;
             this.maxXsize = maxXsize;
             this.maxYsize = maxYsize;
-            bodyparts.Add(new bodypart((sbyte)(maxXsize / 2), (sbyte)(maxYsize / 2)));
+            bodyParts.Add(new BodyPart((sbyte)(maxXsize >> 1), (sbyte)(maxYsize >> 1)));
         }
-
-        //----------------------------------------------------------------
-        //Gets the head
-        public bodypart head { get => bodyparts[0]; }
 
         //--------------------------------------------------------------
         //Movement of the snake
         public void Move(sbyte direction, bool eaten = false)
         {
-            sbyte newxcord;
-            sbyte newycord;
-            if (direction % 2 == 0)
+            sbyte newXCoord;
+            sbyte newYCoord;
+            if ((direction % 2) == 0)
             {
-                newxcord = (sbyte)(head.xcord + direction - 1);
-                newycord = head.ycord;
+                newXCoord = (sbyte)(Head.XCoord + direction - 1);
+                newYCoord = Head.YCoord;
             }//if
             else
             {
-                newxcord = head.xcord;
-                newycord = (sbyte)(head.ycord + direction - 2);
+                newXCoord = Head.XCoord;
+                newYCoord = (sbyte)(Head.YCoord + direction - 2);
             }//else
 
-            if (newxcord == -1 || newxcord == maxXsize || newycord == -1 || newycord == maxYsize)
+            if (newXCoord == -1 || newXCoord == maxXsize || newYCoord == -1 || newYCoord == maxYsize)
             {
                 Dead = true;
                 return;
             }
 
-            bodypart temp = new bodypart(newxcord, newycord);
-
-            bodyparts.Insert(0, temp);
-
+            bodyParts.Insert(0, new BodyPart(newXCoord, newYCoord));
             if (!eaten)
             {
-                bodyparts.Remove(bodyparts.Last());
+                bodyParts.Remove(bodyParts.Last());
             }//if
             else
             {
-                size++;
+                SnakeSize++;
             }//else
         }
 
@@ -77,9 +73,9 @@ namespace snake
         public void DetectCollision()
         {
             sbyte[,] cords = Getcords();
-            for (int i = 1; i < size; i++)
+            for (int i = 1; i < SnakeSize; i++)
             {
-                if (head.xcord == cords[i, 0] && head.ycord == cords[i, 1])
+                if (Head.XCoord == cords[i, 0] && Head.YCoord == cords[i, 1])
                 {
                     this.Dead = true;
                     return;
@@ -91,11 +87,11 @@ namespace snake
         //Get the cords of all the bodyparts
         public sbyte[,] Getcords()
         {
-            sbyte[,] output = new sbyte[size, 2];
-            for (int i = 0; i < size; i++)
+            sbyte[,] output = new sbyte[SnakeSize, 2];
+            for (int i = 0; i < SnakeSize; i++)
             {
-                output[i, 0] = bodyparts[i].xcord;
-                output[i, 1] = bodyparts[i].ycord;
+                output[i, 0] = bodyParts[i].XCoord;
+                output[i, 1] = bodyParts[i].YCoord;
             }//for
             return output;
         }
