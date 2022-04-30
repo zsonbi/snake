@@ -9,13 +9,13 @@ namespace snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Game Game;
+        private Game game;
 
         public MainWindow()
         {
             InitializeComponent();
-            Game = new Game(GameField, ScoreLabel);
-            Game.run();
+            game = new Game(GameField, ScoreLabel);
+            game.run();
         }
 
         //Keyboard control
@@ -24,40 +24,47 @@ namespace snake
             switch (e.Key)
             {
                 case Key.A:
-                    Game.ChangeDirection(0);
+                    game.ChangeDirection(0);
                     break;
 
                 case Key.W:
-                    Game.ChangeDirection(1);
+                    game.ChangeDirection(1);
                     break;
 
                 case Key.D:
-                    Game.ChangeDirection(2);
+                    game.ChangeDirection(2);
                     break;
 
                 case Key.S:
-                    Game.ChangeDirection(3);
+                    game.ChangeDirection(3);
                     break;
 
                 case Key.Left:
-                    Game.ChangeDirection(0);
+                    game.ChangeDirection(0);
                     break;
 
                 case Key.Up:
-                    Game.ChangeDirection(1);
+                    game.ChangeDirection(1);
                     break;
 
                 case Key.Right:
-                    Game.ChangeDirection(2);
+                    game.ChangeDirection(2);
                     break;
 
                 case Key.Down:
-                    Game.ChangeDirection(3);
+                    game.ChangeDirection(3);
                     break;
 
                 default:
                     break;
             }
+        }
+
+        //-------------------------------------------------------------
+        //Starts a new game on click event
+        private void newGameBtn_Click(object sender, RoutedEventArgs e)
+        {
+            game.NewGame();
         }
     }
 }

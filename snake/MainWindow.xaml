@@ -12,6 +12,8 @@
             <RowDefinition Height=" *" />
         </Grid.RowDefinitions>
 
+        <Button Content="New Game" Name="newGameBtn" Click="newGameBtn_Click"  Width="80" HorizontalAlignment="Left" Margin="20,3,0,3" />
+
         <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal">
             <Label Content="Score" Foreground="Black" FontSize="18"></Label>
             <Label Name="ScoreLabel" Content="0" FontSize="18"></Label>

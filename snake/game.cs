@@ -116,7 +116,6 @@ namespace snake
 
         //-----------------------------------------------------------------
         //Paints all the Rectangles in the Field white
-        //No longer used
         private void clear()
         {
             foreach (var item in field.Children)
@@ -168,6 +167,17 @@ namespace snake
                 await Task.Delay(150);
             }//while
             isRunning = false;
+        }
+
+        //-----------------------------------------------------------
+        //Starts a new game
+        public async void NewGame()
+        {
+            player.Die();
+            clear();
+            await Task.Delay(250);
+            this.Score = 0;
+            this.run();
         }
     }
 }

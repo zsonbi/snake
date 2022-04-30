@@ -95,5 +95,12 @@ namespace snake
             }//for
             return output;
         }
+
+        //----------------------------------------------
+        //Kill the snake
+        public void Die()
+        {
+            this.Dead = true;
+        }
     }
 }
